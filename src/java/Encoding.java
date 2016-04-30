@@ -98,6 +98,52 @@ public class Encoding {
  
 		
 	}
+        public static void linkVerify() {
+	// replace ID and key with your own
+	
+    
+
+	URL server = null;
+
+	try {
+		String url = "http://s3-sa-east-1.amazonaws.com/conversorfiles/video.mp4";
+		System.out.println("Connecting to:"+url);
+		server = new URL(url);
+
+	} catch (MalformedURLException mfu) {
+		mfu.printStackTrace();
+		
+	}
+
+	try {
+		
+		System.out.println("Open new connection to tunnel");
+		HttpURLConnection urlConnection = (HttpURLConnection) server.openConnection();
+		
+		
+		urlConnection.connect();
+		
+		String str = urlConnection.getResponseMessage();
+		
+		
+		while((urlConnection.getResponseCode()) != 200){
+			urlConnection = (HttpURLConnection) server.openConnection();
+			urlConnection.connect();
+			System.out.println("Response:"+urlConnection.getResponseCode());
+			Thread.sleep(2000);
+		}
+		
+		
+
+		
+
+	} catch (Exception exp) {
+		exp.printStackTrace();
+                    
+	}
+
+	
+}
  
         
 }

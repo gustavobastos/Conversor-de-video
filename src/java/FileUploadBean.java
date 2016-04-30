@@ -70,6 +70,7 @@ public class FileUploadBean {
                 
                 
             } catch (IOException ex) {
+                ex.printStackTrace();
             }
         }
     return "encodingFile";
