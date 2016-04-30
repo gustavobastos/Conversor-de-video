@@ -52,20 +52,27 @@ public class FileUploadBean {
      */
     public FileUploadBean() {
     }
-    public void upload() {
+    public String upload() {
 
         if (uploadedFile != null) {
             try {
+                           
                 AWSCredentials credentials = new BasicAWSCredentials("AKIAIV52M4ZQGLMOKBIA", "Oh6FuivQUm33MCJzWeR8nzaTLDjlMzUgh5xljiIL");
                 AmazonS3 s3client = new AmazonS3Client(credentials);
                 
-                InputStream is = uploadedFile.getInputStream();
+                
                 ObjectMetadata obj = new ObjectMetadata();
                 obj.setContentLength(uploadedFile.getSize());
                 s3client.putObject(new PutObjectRequest("conversorfiles", "video.dv", uploadedFile.getInputStream(), obj).withCannedAcl(CannedAccessControlList.PublicRead));
+                
+                
+                
+                
+                
             } catch (IOException ex) {
             }
         }
+    return "encodingFile";
     }
     
 }
