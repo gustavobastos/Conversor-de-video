@@ -11,56 +11,72 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Servidor {
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 
+@RequestScoped
+@ManagedBean(name = "servidor")
+public class Servidor {
+	public static String texto;
 	public Servidor() {
 
 	}
 
+	public String getTexto(){
+		return texto;
+	}
+	public void setTexto(String text){
+		this.texto = text;
+	}
+	
 	public int esperaNotificacao() throws IOException {
 
-		{
-			try {
+		try {
 
-				ServerSocket ss = new ServerSocket(7500);
+				ServerSocket ss = new ServerSocket(5000);
+				System.out.println("Servidor iniciado");
+				ss.setSoTimeout(100000);
+				Socket client = ss.accept();
+				
+				String ip = InetAddress.getLocalHost().getHostAddress();
+				System.out.println("Notificação recebida!");
+				InputStream in = client.getInputStream();
+				ip = ip+" "+InetAddress.getLocalHost();
+				setTexto(ip);
+				StringBuffer strbuf = new StringBuffer();
 
-				for (;;) {
-
-					System.out.println("Servidor iniciado");
-					Socket client = ss.accept();
-					System.out.println("Notificação recebida!");
-					InputStream in = client.getInputStream();
-
-					StringBuffer strbuf = new StringBuffer();
-
-					byte[] buffer = new byte[1024 * 4];
-					try {
-						int n = 0;
-						while (-1 != (n = in.read(buffer))) {
-							strbuf.append(new String(buffer, 0, n));
-						}
-
-						in.close();
-						String result = java.net.URLDecoder.decode(strbuf.toString(), "UTF-8");
-						System.out.println(result);
-						client.close();
-						if (result.contains("Finished"))
-							return 0;
-						return 1;
-
-					} catch (IOException ioe) {
-						ioe.printStackTrace();
+				byte[] buffer = new byte[1024 * 4];
+				try {
+					int n = 0;
+					while (-1 != (n = in.read(buffer))) {
+						strbuf.append(new String(buffer, 0, n));
 					}
 
+					in.close();
+					String result = java.net.URLDecoder.decode(strbuf.toString(), "UTF-8");
+					System.out.println(result);
+					client.close();
+					if (result.contains("Finished")) {
+						ss.close();
+						return 1;
+					}
+					ss.close();
+					return 1;
+
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+					texto.concat(ioe.getMessage());
 				}
-			}
 
-			catch (Exception e) {
-				System.err.println(e);
-				System.err.println("Usage: java HttpMirror <port>");
-			}
-
+			
 		}
+
+		catch (Exception e) {
+			System.err.println(e);
+			System.err.println("Usage: java HttpMirror <port>");
+			texto.concat("\n"+e.getMessage());
+		}
+
 		return 1;
 	}
 }

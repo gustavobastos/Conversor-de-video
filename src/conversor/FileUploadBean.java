@@ -1,5 +1,7 @@
 package conversor;
 
+import java.util.Properties;
+
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
@@ -17,6 +19,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.servlet.http.Part;
+
 
 /**
  *
@@ -36,9 +39,7 @@ public class FileUploadBean {
 		this.uploadedFile = uploadedFile;
 	}
 
-	/**
-	 * Creates a new instance of FileUploadBean
-	 */
+
 	public FileUploadBean() {
 	}
 
@@ -47,22 +48,33 @@ public class FileUploadBean {
 
 		if (uploadedFile != null) {
 
+			
 			try {
 
-				AWSCredentials credentials = new BasicAWSCredentials("AKIAJMKKKHBMXB4TZRLA",
-						"1UlJHAGQYTR+/ASUFt45N04/Sn2C0hECBu79RCwA");
-				AmazonS3 s3client = new AmazonS3Client(credentials);
-				ObjectMetadata obj = new ObjectMetadata();
-				obj.setContentLength(uploadedFile.getSize());
-				s3client.putObject(
-						new PutObjectRequest("conversorfiles", "video.dv", uploadedFile.getInputStream(), obj)
-								.withCannedAcl(CannedAccessControlList.PublicRead));
-				Encoding encoding = new Encoding();
+				Properties prop = new ManipulatorProp().getPro();
+				InputStream is = uploadedFile.getInputStream(); 
 				
-				encoding.startEncodingWorkflow();
-				Servidor servidor = new Servidor();
-				if(servidor.esperaNotificacao() == 1)
+				//teste para verificar se os arquivos de entrada não são vídeos
+				if(uploadedFile.getContentType().contains("text"))
 					return "Erro";
+				if(uploadedFile.getContentType().contains("image"))
+					return "Erro";
+				
+				//Identificação no servidor da Amazon
+				AWSCredentials credentials = new BasicAWSCredentials(prop.getProperty("prop.amazon.keyId"),
+						prop.getProperty("prop.amazon.KeySecret"));
+				//AmazonS3 s3client = new AmazonS3Client(credentials);
+				//ObjectMetadata obj = new ObjectMetadata();
+				//obj.setContentLength(uploadedFile.getSize());
+				//s3client.putObject(
+					//	new PutObjectRequest("conversorfiles", "video.dv", uploadedFile.getInputStream(), obj)
+						//		.withCannedAcl(CannedAccessControlList.PublicRead));
+				//Envia o arquivo para fila de conversão, aguarda resposta e disponibilidade do video convertido
+				Encoding encoding = new Encoding();
+				encoding.startEncodingWorkflow();
+				//Servidor servidor = new Servidor();
+				//if (servidor.esperaNotificacao() == 1)
+				//	return "Erro";
 				encoding.linkVerify();
 
 			} catch (IOException ex) {

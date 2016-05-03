@@ -2,7 +2,7 @@ package conversor;
 
 import java.io.*;
 import java.net.*;
-
+import java.util.Properties;
 /**
  *
  * @author Gustavo Bastos
@@ -15,10 +15,12 @@ public class Encoding {
 	}
 
 	// Conversão do arquivo e envio para o repositório no Amazon S3
-	public void startEncodingWorkflow() {
+	public void startEncodingWorkflow() throws IOException {
 
-		String userID = "72818";
-		String userKey = "c296b34de4f5b532bec5dc5c640af1ac";
+		Properties prop = new ManipulatorProp().getPro();
+		
+		String userID = prop.getProperty("prop.encoding.userId");
+		String userKey = prop.getProperty("prop.encoding.useKey");
 
 		StringBuffer xml = new StringBuffer();
 
@@ -28,7 +30,7 @@ public class Encoding {
 		xml.append("<action>addMedia</action>");
 		xml.append("<source>http://conversorfiles.s3.amazonaws.com/video.dv</source>");
 		xml.append("<notify_format>xml</notify_format>");
-		xml.append("<notify>http://186.206.183.165:7500</notify>");
+		xml.append("<notify>http://52.67.77.120:5000</notify>");
 		xml.append("<format>");
 		xml.append("<output>mp4</output>");
 		xml.append("mpeg4");
