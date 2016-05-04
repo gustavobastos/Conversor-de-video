@@ -2,10 +2,16 @@ package conversor;
 
 import java.io.*;
 import java.net.*;
+//import java.util.Properties;
 import java.util.Properties;
+
 /**
  *
  * @author Gustavo Bastos
+ * 
+ *         Classe responsável por inserir o vídeo na fila para conversão do
+ *         encoding.com e verificar se o vídeo foi disponibilizado no servidor
+ *         da Amazon
  */
 
 public class Encoding {
@@ -14,11 +20,12 @@ public class Encoding {
 
 	}
 
-	// Conversão do arquivo e envio para o repositório no Amazon S3
-	public void startEncodingWorkflow() throws IOException {
+	// Conversão do arquivo e envio do video convertido para o repositório no
+	// Amazon S3
+	public int startEncodingWorkflow() throws IOException {
 
 		Properties prop = new ManipulatorProp().getPro();
-		
+
 		String userID = prop.getProperty("prop.encoding.userId");
 		String userKey = prop.getProperty("prop.encoding.useKey");
 
@@ -30,7 +37,7 @@ public class Encoding {
 		xml.append("<action>addMedia</action>");
 		xml.append("<source>http://conversorfiles.s3.amazonaws.com/video.dv</source>");
 		xml.append("<notify_format>xml</notify_format>");
-		xml.append("<notify>http://52.67.77.120:5000</notify>");
+		xml.append("<notify>http://52.67.84.207:5000</notify>");
 		xml.append("<format>");
 		xml.append("<output>mp4</output>");
 		xml.append("mpeg4");
@@ -77,6 +84,7 @@ public class Encoding {
 
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
+				return 1;
 
 			}
 
@@ -84,13 +92,14 @@ public class Encoding {
 
 		} catch (Exception exp) {
 			exp.printStackTrace();
+			return 1;
 
 		}
-
+		return 0;
 	}
 
 	// Verifica se o vídeo já está disponível para reprodução
-	public void linkVerify() {
+	public int linkVerify() {
 
 		URL server = null;
 
@@ -101,12 +110,12 @@ public class Encoding {
 
 		} catch (MalformedURLException mfu) {
 			mfu.printStackTrace();
+			return 1;
 
 		}
 
 		try {
 
-			System.out.println("Open new connection to tunnel");
 			HttpURLConnection urlConnection = (HttpURLConnection) server.openConnection();
 
 			urlConnection.connect();
@@ -121,10 +130,9 @@ public class Encoding {
 
 		} catch (Exception exp) {
 			exp.printStackTrace();
-
+			return 1;
 		}
-
+		return 0;
 	}
 
-	
 }
