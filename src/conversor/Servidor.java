@@ -26,13 +26,13 @@ public class Servidor {
 
 		try {
 
-			ServerSocket ss = new ServerSocket(5000);
+			ServerSocket ss = new ServerSocket(8000);
 			System.out.println("Servidor iniciado");
 
 			Socket client = ss.accept();
 			StringBuffer strbuf = new StringBuffer();
 
-			byte[] buffer = new byte[1024 * 8];
+			byte[] buffer = new byte[1024 * 4];
 			try {
 				InputStream in = client.getInputStream();
 				int n = 0;
@@ -43,17 +43,21 @@ public class Servidor {
 				String result = java.net.URLDecoder.decode(strbuf.toString(), "UTF-8");
 				System.out.println(result);
 				client.close();
+				
+				//Se a resposta contém a informação "Finished" então a conversão ocorreu com sucesso
 				if (result.contains("Finished")) {
 					in.close();
 					ss.close();
 					return 0;
 				}
+				
 				in.close();
 				ss.close();
 				return 1;
 
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
+				return 1;
 
 			} finally {
 				if (ss != null) {

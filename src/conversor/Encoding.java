@@ -37,7 +37,7 @@ public class Encoding {
 		xml.append("<action>addMedia</action>");
 		xml.append("<source>http://conversorfiles.s3.amazonaws.com/video.dv</source>");
 		xml.append("<notify_format>xml</notify_format>");
-		xml.append("<notify>http://52.67.84.207:5000</notify>");
+		xml.append("<notify>http://ec2-52-67-84-207.sa-east-1.compute.amazonaws.com:5000</notify>");
 		xml.append("<format>");
 		xml.append("<output>mp4</output>");
 		xml.append("mpeg4");
@@ -72,6 +72,7 @@ public class Encoding {
 			urlConnection.connect();
 			InputStream is = urlConnection.getInputStream();
 			StringBuffer strbuf = new StringBuffer();
+			
 			byte[] buffer = new byte[1024 * 4];
 
 			try {

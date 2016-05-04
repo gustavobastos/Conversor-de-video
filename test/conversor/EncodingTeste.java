@@ -27,7 +27,28 @@ public class EncodingTeste extends TestCase {
 			urlConnection.connect();
 			Encoding teste = new Encoding();
 			if (urlConnection.getResponseCode() == 200)
-				assertTrue(teste.linkVerify() == 1);
+				assertTrue(teste.linkVerify() == 0);
+			;
+
+		} catch (MalformedURLException mfu) {
+			mfu.printStackTrace();
+
+		}
+	}
+	
+	public void testStartEncodingWorkflow() throws IOException{
+		URL server = null;
+
+		try {
+			String url = "http://conversorfiles.s3.amazonaws.com/video.dv";
+			System.out.println("Connecting to:" + url);
+			server = new URL(url);
+
+			HttpURLConnection urlConnection = (HttpURLConnection) server.openConnection();
+			urlConnection.connect();
+			Encoding teste = new Encoding();
+			if (urlConnection.getResponseCode() == 200)
+				assertTrue(teste.startEncodingWorkflow() == 0);
 			;
 
 		} catch (MalformedURLException mfu) {
