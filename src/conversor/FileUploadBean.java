@@ -68,7 +68,7 @@ public class FileUploadBean {
 				// ser excluído
 				if (verificaExistencia() == true) {
 					try {
-						s3client.deleteObject(new DeleteObjectRequest("conversorvideos", "video.mp4"));
+						s3client.deleteObject(new DeleteObjectRequest("conversorfiles", "video.mp4"));
 					} catch (AmazonClientException ace) {
 						System.out.println("Caught an AmazonClientException.");
 						System.out.println("Error Message: " + ace.getMessage());
@@ -88,9 +88,9 @@ public class FileUploadBean {
 				if (encoding.startEncodingWorkflow() == 1)
 					return "Erro";
 
-				// Servidor servidor = new Servidor();
-				// if (servidor.esperaNotificacao() == 1)
-				// return "Erro";
+				 //Servidor servidor = new Servidor();
+				 //if (servidor.esperaNotificacao() == 1)
+					// return "Erro";
 
 				if (encoding.linkVerify() == 1) {
 					return "Erro";
@@ -108,7 +108,6 @@ public class FileUploadBean {
 
 		try {
 			String url = "http://s3-sa-east-1.amazonaws.com/conversorfiles/video.mp4";
-			System.out.println("Connecting to:" + url);
 			server = new URL(url);
 
 			HttpURLConnection urlConnection = (HttpURLConnection) server.openConnection();

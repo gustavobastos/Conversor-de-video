@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import javax.faces.bean.RequestScoped;
+
 /**
  *
  * @author Gustavo Bastos
@@ -14,6 +16,7 @@ import java.net.Socket;
  *         encoding.com
  */
 
+@RequestScoped
 public class Servidor {
 
 	public Servidor() {
@@ -26,7 +29,7 @@ public class Servidor {
 
 		try {
 
-			ServerSocket ss = new ServerSocket(8000);
+			ServerSocket ss = new ServerSocket(5000);
 			System.out.println("Servidor iniciado");
 
 			Socket client = ss.accept();

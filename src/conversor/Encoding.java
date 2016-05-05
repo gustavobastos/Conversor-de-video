@@ -5,6 +5,8 @@ import java.net.*;
 //import java.util.Properties;
 import java.util.Properties;
 
+import javax.faces.bean.RequestScoped;
+
 /**
  *
  * @author Gustavo Bastos
@@ -14,6 +16,8 @@ import java.util.Properties;
  *         da Amazon
  */
 
+
+@RequestScoped
 public class Encoding {
 
 	public Encoding() {
