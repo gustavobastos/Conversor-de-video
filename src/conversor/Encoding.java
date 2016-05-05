@@ -11,8 +11,8 @@ import javax.faces.bean.RequestScoped;
  *
  * @author Gustavo Bastos
  * 
- *         Classe respons·vel por inserir o vÌdeo na fila para convers„o do
- *         encoding.com e verificar se o vÌdeo foi disponibilizado no servidor
+ *         Classe respons√°vel por inserir o v√≠deo na fila para convers√£o do
+ *         encoding.com e verificar se o v√≠deo foi disponibilizado no servidor
  *         da Amazon
  */
 
@@ -23,7 +23,7 @@ public class Encoding {
 
 	}
 
-	// Convers„o do arquivo e envio do video convertido para o repositÛrio no
+	// Convers√£o do arquivo e envio do video convertido para o reposit√≥rio no
 	// Amazon S3
 	public static int startEncodingWorkflow() throws IOException {
 
@@ -32,8 +32,8 @@ public class Encoding {
 		String userID = prop.getProperty("prop.encoding.userId");
 		String userKey = prop.getProperty("prop.encoding.useKey");
 
-		// endereÁo para receber a notificaÁ„o do encoding.com
-		String EndNotificacao = "[endereÁo para recepÁ„o da notificaÁ„o]";
+		// endere√ßo para receber a notifica√ß√£o do encoding.com
+		String EndNotificacao = "[endere√ßo para recep√ß√£o da notifica√ß√£o]";
 
 		StringBuffer xml = new StringBuffer();
 
@@ -84,7 +84,7 @@ public class Encoding {
 		return 0;
 	}
 
-	// Verifica se o vÌdeo j· est· disponÌvel para reproduÁ„o
+	// Verifica se o v√≠deo j√° est√° dispon√≠vel para reprodu√ß√£o
 	public static int linkVerify() {
 
 		URL server = null;
@@ -105,10 +105,12 @@ public class Encoding {
 
 			urlConnection.connect();
 
-			// fica em loop atÈ que o vÌdeo convertido esteja disponÌvel
+			// fica em loop at√© que o v√≠deo convertido esteja dispon√≠vel
 			while ((urlConnection.getResponseCode()) != 200) {
+				urlConnection.disconnect();
 				System.out.println("Response:" + urlConnection.getResponseCode());
 				Thread.sleep(2000);
+				urlConnection.connect();
 			}
 			urlConnection.disconnect();
 
