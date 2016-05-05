@@ -107,10 +107,11 @@ public class Encoding {
 
 			// fica em loop até que o vídeo convertido esteja disponível
 			while ((urlConnection.getResponseCode()) != 200) {
-				urlConnection.disconnect();
+			urlConnection.disconnect();
+				urlConnection = (HttpURLConnection) server.openConnection();
+				urlConnection.connect();
 				System.out.println("Response:" + urlConnection.getResponseCode());
 				Thread.sleep(2000);
-				urlConnection.connect();
 			}
 			urlConnection.disconnect();
 
