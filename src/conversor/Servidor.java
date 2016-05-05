@@ -1,12 +1,10 @@
 package conversor;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-
-import javax.faces.bean.RequestScoped;
 
 /**
  *
@@ -16,8 +14,8 @@ import javax.faces.bean.RequestScoped;
  *         encoding.com
  */
 
-@RequestScoped
 public class Servidor {
+	int porta = 5000;
 
 	public Servidor() {
 
@@ -29,57 +27,39 @@ public class Servidor {
 
 		try {
 
-			ServerSocket ss = new ServerSocket(5000);
+			ServerSocket ss = new ServerSocket(porta);
 			System.out.println("Servidor iniciado");
 
 			Socket client = ss.accept();
 			StringBuffer strbuf = new StringBuffer();
 
-			byte[] buffer = new byte[1024 * 4];
-			try {
-				InputStream in = client.getInputStream();
-				int n = 0;
-				while (-1 != (n = in.read(buffer))) {
-					strbuf.append(new String(buffer, 0, n));
-				}
+			BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+			String inputLine;
 
-				String result = java.net.URLDecoder.decode(strbuf.toString(), "UTF-8");
-				System.out.println(result);
-				client.close();
-				
-				//Se a resposta contém a informação "Finished" então a conversão ocorreu com sucesso
-				if (result.contains("Finished")) {
-					in.close();
-					ss.close();
-					return 0;
-				}
-				
-				in.close();
-				ss.close();
-				return 1;
-
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
-				return 1;
-
-			} finally {
-				if (ss != null) {
-					try {
-						ss.close();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
+			while ((inputLine = in.readLine()) != null) {
+				strbuf.append(inputLine);
 			}
 
+			String result = java.net.URLDecoder.decode(strbuf.toString(), "UTF-8");
+			System.out.println(result);
+			client.close();
+
+			// Se a resposta contém a informação "Finished" então a conversão
+			// ocorreu com sucesso
+			if (result.contains("Finished")) {
+				in.close();
+				ss.close();
+				return 0;
+			}
+
+			in.close();
+			ss.close();
+			return 1;
+
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+			return 1;
 		}
-
-		catch (Exception e) {
-			System.err.println(e);
-
-		}
-
-		return 1;
 	}
 
 }

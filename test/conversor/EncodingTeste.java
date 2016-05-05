@@ -35,8 +35,8 @@ public class EncodingTeste extends TestCase {
 
 		}
 	}
-	
-	public void testStartEncodingWorkflow() throws IOException{
+
+	public void testStartEncodingWorkflow() throws IOException {
 		URL server = null;
 
 		try {

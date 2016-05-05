@@ -80,19 +80,17 @@ public class FileUploadBean {
 				s3client.putObject(
 						new PutObjectRequest("conversorfiles", "video.dv", uploadedFile.getInputStream(), obj)
 								.withCannedAcl(CannedAccessControlList.PublicRead));
+
 				// Envia o arquivo para fila de conversão, aguarda resposta e
 				// disponibilidade do video convertido
-
-				Encoding encoding = new Encoding();
-
-				if (encoding.startEncodingWorkflow() == 1)
+				if (Encoding.startEncodingWorkflow() == 1)
 					return "Erro";
 
-				 //Servidor servidor = new Servidor();
-				 //if (servidor.esperaNotificacao() == 1)
-					// return "Erro";
+				Servidor servidor = new Servidor();
+				if (servidor.esperaNotificacao() == 1)
+					return "Erro";
 
-				if (encoding.linkVerify() == 1) {
+				if (Encoding.linkVerify() == 1) {
 					return "Erro";
 				}
 
@@ -112,7 +110,6 @@ public class FileUploadBean {
 
 			HttpURLConnection urlConnection = (HttpURLConnection) server.openConnection();
 			urlConnection.connect();
-			Encoding teste = new Encoding();
 			if (urlConnection.getResponseCode() == 200)
 				return true;
 
